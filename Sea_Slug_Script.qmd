@@ -1,0 +1,48 @@
+---
+title: "nudibranch_data"
+---
+
+```{r}
+#read in packages
+library(tidyverse)
+# Note: readxl package is installed with tidyverse, but not loaded as part of core tidyverse packages
+library(readxl)
+#load skimr
+library(skimr)
+library(ggplot2)
+```
+
+```{r}
+#read in data sheet
+### nudi Data ----
+dat_nudi<- read_excel("Sea_Slug_Data.xlsx")
+```
+
+```{r}
+#total sea slugs collected by site and date
+dat_nudi |> 
+  group_by(site_name, date) |>
+  summarise(total_hr = sum (`total_search_time_hr`))
+```
+
+```{r}
+#pivot longer
+dat_nudi_1 <- dat_nudi |> 
+pivot_longer(cols = !group:total_search_time_hr, 
+               names_to = "Taxa", 
+               values_to = "Abundance")
+```
+
+```{r}
+#total nudibranchs collected
+dat_nudi_1 |> 
+  group_by(site_name, date) |>
+  summarise( total_nudi = sum (Abundance))
+```
+
+```{r}
+#total time collecting and total nudibranchs
+dat_nudi |> 
+  summarise(total_hr = sum (`total_search_time_hr`),
+            total_nudi = sum (Abundance))
+```
